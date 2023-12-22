@@ -1,26 +1,46 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-
+import LoginView from "../views/LoginView.vue";
+import PersonnalGalleryView from "../views/PersonnalGalleryView.vue";
+import PublicGalleryView from "../views/PublicGalleryView.vue";
+import CartView from "../views/CartView.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "home",
-    component: HomeView,
+    name: "login",
+    component: LoginView,
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: "/personnal-gallery",
+    name: "personnal-gallery",
+    component: PersonnalGalleryView,
+  },
+  {
+    path: "/public-gallery",
+    name: "public-gallery",
+    component: PublicGalleryView,
+  },
+  {
+    path: "/cart",
+    name: "cart",
+    component: CartView,
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+// import { useUser } from "@/store/User";
+// import { storeToRefs } from "pinia";
+
+// const store = useUser();
+// const { loggedUsername, logged } = storeToRefs(store);
+const logged = true;
+router.beforeEach(async (to, from) => {
+  // TODO : make a call to check log
+  if (!logged && to.name !== "login") {
+    return { name: "login" };
+  }
 });
 
 export default router;
