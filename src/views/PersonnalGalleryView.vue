@@ -48,4 +48,9 @@ const deleteFromGalery = (id: number) => {
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 5px;
 }
+#personnal-images {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 5px;
+}
 </style>

@@ -5,7 +5,12 @@
   </div>
   <div v-else class="image-item">
     <div class="not-empty-image">
-      <img :src="source" @click="toggleFullscreen" ref="image" />
+      <img
+        :src="source"
+        @click="toggleFullscreen"
+        ref="image"
+        alt="personnal image"
+      />
       <div>
         <button class="delete-button delete-image-button" @click="deleteImage">
           X
@@ -148,13 +153,12 @@ img {
   border: 0.2rem solid lavender;
   border-radius: 1rem;
   width: 90%;
-  margin: 5%;
   z-index: 10;
 }
 
 img:hover {
-  transition: transform 200ms ease-in-out;
-  transform: scale(1.25);
+  transition: transform 100ms ease-in-out;
+  transform: scale(1.5) translate(16.5%, 16.5%);
   cursor: zoom-in;
 }
 img:not(:hover) {
@@ -177,8 +181,6 @@ img:not(:hover) {
 .delete-image-button {
   float: right;
   padding: 0.4rem 0.6rem;
-  margin-right: 0.4rem;
-  margin-top: 0.3rem;
 }
 
 .delete-button {
@@ -225,6 +227,7 @@ select {
 .image-item {
   background-color: white;
   border-radius: 1rem;
+  padding: 1.5% 1.5%;
 }
 #empty-image {
   min-height: 30vh;
