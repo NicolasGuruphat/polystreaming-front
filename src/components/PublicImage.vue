@@ -23,7 +23,7 @@ const props = defineProps({
   },
 });
 const addToCart = () => {
-  if (props.id in cart.value) return;
+  if (props.id in cart.value) return; // Todo : doesn't work
   cart.value.push(props.id);
 };
 </script>

@@ -1,33 +1,57 @@
 <template>
-  <div
-    style="
-      /* border: 2px dashed grey; */
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-    "
-  >
-    <img src="/blue.png" style="width: 100%; padding: 5%" />
-    <div>
-      <button class="image-action-button">Delete</button>
-      <form v-on:submit.prevent="openToMarketplace">
-        <input placeholder="Price" type="number" v-model="price" />
-        <button class="image-action-button" type="submit">
-          Open to marketplace
+  <div v-if="empty" class="image-item" id="empty-image">
+    <label class="add-image-label" for="add-image">Add an image</label>
+    <input id="add-image" type="file" />
+  </div>
+  <div v-else class="image-item">
+    <div class="not-empty-image">
+      <img src="/blue.png" />
+      <div>
+        <!-- <div class="price-and-delete-row"> -->
+        <button class="delete-button delete-image-button" @click="deleteImage">
+          X
         </button>
-      </form>
-      <form v-on:submit.prevent="share">
-        <select v-model="selectedUsername">
-          <option v-for="username of usernames" :key="username">
-            {{ username }}
-          </option>
-          <!-- ="test[]" size="1" multiple> -->
-        </select>
+        <div style="clear: both">
+          <span class="price-label">{{ price }} €</span>
+          <button class="image-action-button" @click="toggleMarketplace">
+            {{
+              openedToMarketplace
+                ? "Remove from marketplace"
+                : "Open to marketplace"
+            }}
+          </button>
+        </div>
+        <form v-on:submit.prevent="updatePrice">
+          <input
+            placeholder="Price"
+            type="number"
+            v-model="modifiedPrice"
+            min="0"
+            step="10"
+            style="width: 35%; display: inline-block"
+          />
+          <button
+            class="image-action-button"
+            style="width: 40%; display: inline-block"
+          >
+            Update price
+          </button>
+        </form>
 
-        <button class="image-action-button">Share</button>
-      </form>
+        <form v-on:submit.prevent="share">
+          <select v-model="selectedUsername">
+            <option v-for="username of usernames" :key="username">
+              {{ username }}
+            </option>
+          </select>
+          <button class="image-action-button">Share</button>
+        </form>
+      </div>
+    </div>
+    <div style="text-align: left; min-height: 2.75rem">
       <span class="user-share-with" v-for="user of sharedWith" :key="user">
         <button
-          class="delete-user-share-with-button"
+          class="delete-button delete-user-share-with-button"
           @click="deleteShare(user)"
         >
           X
@@ -38,43 +62,112 @@
   </div>
 </template>
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref, defineProps, defineEmits } from "vue";
 
-const price = ref<number>(0);
-const openToMarketplace = () => {
-  console.log(price.value);
+const props = defineProps({
+  empty: {
+    type: Boolean,
+    default: false,
+  },
+  id: {
+    type: Number,
+    required: false,
+  },
+  source: {
+    type: String,
+    required: false,
+  },
+  price: {
+    type: Number,
+    required: false,
+  },
+  openedToMarketplace: {
+    type: Boolean,
+    required: false,
+  },
+});
+
+const updatePrice = () => {
+  console.log(modifiedPrice.value);
+  emits("update:price", modifiedPrice.value);
+};
+const emits = defineEmits([
+  "update:price",
+  "update:openedToMarketplace",
+  "deleteImage",
+]);
+const deleteImage = () => {
+  const result = confirm(
+    "This image will be deleted from your galery.\n" +
+      "People that have access to this image will not have it anymore.\n" +
+      "Are you sure that you want to do this ?"
+  );
+  if (!result) return;
+  emits("deleteImage", props.id);
+};
+const modifiedPrice = ref<number>(props.price ? props.price : 0);
+const toggleMarketplace = () => {
+  emits("update:openedToMarketplace", !props.openedToMarketplace);
 };
 
-const usernames = reactive(["Nicolas", "Gregory", "Mathis"]);
-const selectedUsername = ref(usernames[0]);
+const usernames = ref(["Nicolas", "Gregory", "Mathis", "Guillaume", "Vincent"]);
+const selectedUsername = ref(usernames.value[0]);
 
-const sharedWith = reactive<Array<string>>([]); // to fill with api call ?
+const sharedWith = ref<Array<string>>([]); // to fill with api call ?
 const share = () => {
-  if (selectedUsername.value in sharedWith) return; // todo : doesnt work
-  sharedWith.push(selectedUsername.value);
+  if (selectedUsername.value in sharedWith.value) return; // todo : doesnt work
+  sharedWith.value.push(selectedUsername.value);
 };
 
 const deleteShare = (user: string) => {
-  sharedWith.splice(sharedWith.indexOf(user), 1);
+  sharedWith.value.splice(sharedWith.value.indexOf(user), 1);
 };
 </script>
 <style scoped>
+form {
+  border: 2px dashed lavender;
+  border-radius: 1rem;
+  margin: 0.25rem 0;
+  display: flex;
+  justify-content: space-between;
+}
+img {
+  border: 0.2rem solid lavender;
+  border-radius: 1rem;
+  width: 90%;
+  margin: 5%;
+}
+/* .price-and-delete-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+} */
 .user-share-with {
   background-color: lavender;
   border-radius: 1.25rem;
   display: inline-block;
+  font-size: 0.75rem;
   padding: 0.5rem;
   margin: 0.25rem;
 }
-.delete-user-share-with-button {
-  background-color: lavender;
+.delete-image-button {
+  float: right;
+  padding: 0.275rem 0.6rem;
+  margin-right: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.delete-button {
+  background-color: lavenderblush;
   border: none;
-  border-radius: 1rem;
-  color: red;
-  font-size: 0.75rem;
+  color: black;
   font-weight: bold;
-  margin-right: 0.5rem;
-  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+}
+.delete-user-share-with-button {
+  font-size: 0.5rem;
+  margin-right: 0.25rem;
+  padding: 0.275rem 0.4rem;
 }
 
 .image-action-button,
@@ -84,6 +177,41 @@ select {
   border: none;
   border-radius: 1rem;
   margin: 0.5rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem;
+}
+
+#empty-image {
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 5px dashed lavender;
+  display: flex;
+  font-size: 2rem;
+  justify-content: center;
+}
+#add-image {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.add-image-label {
+  cursor: pointer;
+  position: absolute;
+}
+.image-item {
+  background-color: white;
+  border-radius: 1rem;
+}
+#empty-image {
+  min-height: 30vh;
+}
+.not-empty-image {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.price-label {
+  font-style: italic;
+  clear: both;
 }
 </style>

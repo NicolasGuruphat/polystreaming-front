@@ -14,7 +14,7 @@
   </form>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useUser } from "@/store/User";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
@@ -27,6 +27,10 @@ const { loggedUsername, logged } = storeToRefs(store);
 let username = ref<string>("");
 let password = ref<string>("");
 
+onMounted(() => {
+  logged.value = false;
+  loggedUsername.value = "";
+});
 const register = () => {
   let registerSuccessful = true;
   if (!registerSuccessful) return;
