@@ -1,16 +1,16 @@
 <template>
-  <h1>Login</h1>
-  <form v-on:submit.prevent="login">
+  <h1>Register</h1>
+  <form v-on:submit.prevent="register">
     <input type="text" placeholder="Username" v-model="username" required />
     <input type="password" placeholder="Password" v-model="password" required />
     <div style="width: 50%">
       <div style="text-align: left">
-        <router-link to="/register" id="register">
-          You don't have an account ? Please register
+        <router-link to="/" id="login">
+          You already have an account ? Please login
         </router-link>
       </div>
     </div>
-    <button type="submit">Login</button>
+    <button type="submit">Register</button>
   </form>
 </template>
 <script setup lang="ts">
@@ -27,9 +27,9 @@ const { loggedUsername, logged } = storeToRefs(store);
 let username = ref<string>("");
 let password = ref<string>("");
 
-const login = () => {
-  let loginSuccessful = true;
-  if (!loginSuccessful) return;
+const register = () => {
+  let registerSuccessful = true;
+  if (!registerSuccessful) return;
   router.push("/public-gallery");
   loggedUsername.value = username.value;
   logged.value = true;

@@ -1,5 +1,6 @@
 <template>
-  <div id="username">{{ loggedUsername }}</div>
+  <div id="username" v-if="logged">Hello {{ loggedUsername }} !</div>
+
   <router-link id="cart" v-if="logged" to="/cart">cart</router-link>
 
   <nav v-if="logged">
@@ -15,6 +16,14 @@ import { storeToRefs } from "pinia";
 const store = useUser();
 const { loggedUsername, logged } = storeToRefs(store);
 </script>
+<style>
+body {
+  background-color: aliceblue;
+}
+button:hover {
+  cursor: pointer;
+}
+</style>
 <style scoped>
 #username {
   left: 1rem;
