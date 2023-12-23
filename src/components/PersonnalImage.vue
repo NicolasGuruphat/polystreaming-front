@@ -5,7 +5,7 @@
   </div>
   <div v-else class="image-item">
     <div class="not-empty-image">
-      <img src="/blue.png" />
+      <img src="/blue.png" @click="toggleZoom" ref="image" />
       <div>
         <!-- <div class="price-and-delete-row"> -->
         <button class="delete-button delete-image-button" @click="deleteImage">
@@ -62,7 +62,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { reactive, ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits } from "vue";
 
 const props = defineProps({
   empty: {
@@ -87,15 +87,30 @@ const props = defineProps({
   },
 });
 
-const updatePrice = () => {
-  console.log(modifiedPrice.value);
-  emits("update:price", modifiedPrice.value);
-};
 const emits = defineEmits([
   "update:price",
   "update:openedToMarketplace",
   "deleteImage",
 ]);
+
+const zoom = ref<boolean>(false);
+const image = ref<HTMLElement>();
+
+const toggleZoom = () => {
+  if (image.value == undefined) return;
+  zoom.value = !zoom.value;
+  if (zoom.value) {
+    image.value.style.transform = "scale(2)";
+    image.value.style.cursor = "zoom-out";
+  } else {
+    image.value.style.transform = "scale(1)";
+    image.value.style.cursor = "zoom-in";
+  }
+};
+const updatePrice = () => {
+  emits("update:price", modifiedPrice.value);
+};
+
 const deleteImage = () => {
   const result = confirm(
     "This image will be deleted from your galery.\n" +
@@ -136,6 +151,17 @@ img {
   border-radius: 1rem;
   width: 90%;
   margin: 5%;
+  z-index: 10;
+}
+
+img:hover {
+  transition: transform 200ms ease-in-out;
+  transform: scale(1.25);
+  cursor: zoom-in;
+}
+img:not(:hover) {
+  transition: transform 200ms ease-in-out;
+  transform: scale(1);
 }
 /* .price-and-delete-row {
   display: flex;
@@ -152,7 +178,7 @@ img {
 }
 .delete-image-button {
   float: right;
-  padding: 0.275rem 0.6rem;
+  padding: 0.4rem 0.6rem;
   margin-right: 0.4rem;
   margin-top: 0.3rem;
 }
@@ -209,7 +235,6 @@ select {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
-
 .price-label {
   font-style: italic;
   clear: both;
