@@ -5,9 +5,8 @@
   </div>
   <div v-else class="image-item">
     <div class="not-empty-image">
-      <img src="/blue.png" @click="toggleZoom" ref="image" />
+      <img :src="source" @click="toggleFullscreen" ref="image" />
       <div>
-        <!-- <div class="price-and-delete-row"> -->
         <button class="delete-button delete-image-button" @click="deleteImage">
           X
         </button>
@@ -63,6 +62,7 @@
 </template>
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from "vue";
+import { useFullscreen } from "@vueuse/core";
 
 const props = defineProps({
   empty: {
@@ -93,20 +93,18 @@ const emits = defineEmits([
   "deleteImage",
 ]);
 
-const zoom = ref<boolean>(false);
 const image = ref<HTMLElement>();
-
-const toggleZoom = () => {
+const { isFullscreen, toggle } = useFullscreen(image);
+const toggleFullscreen = () => {
   if (image.value == undefined) return;
-  zoom.value = !zoom.value;
-  if (zoom.value) {
-    image.value.style.transform = "scale(2)";
+  toggle();
+  if (isFullscreen) {
     image.value.style.cursor = "zoom-out";
   } else {
-    image.value.style.transform = "scale(1)";
     image.value.style.cursor = "zoom-in";
   }
 };
+
 const updatePrice = () => {
   emits("update:price", modifiedPrice.value);
 };
@@ -208,8 +206,8 @@ select {
 
 #empty-image {
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.5);
-  border: 5px dashed lavender;
+  background-color: rgba(250, 250, 230, 0.5);
+  border: 5px dashed #f0e6fa;
   display: flex;
   font-size: 2rem;
   justify-content: center;

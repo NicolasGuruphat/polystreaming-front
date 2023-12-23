@@ -25,9 +25,14 @@ import { ref } from "vue";
 
 let publicImages = ref([
   { id: 1, source: "blue.png", price: 50, openedToMarketplace: false },
-  { id: 2, source: "blue.png", price: 540, openedToMarketplace: true },
-  { id: 3, source: "blue.png", price: 800, openedToMarketplace: true },
-  { id: 4, source: "blue.png", price: 300, openedToMarketplace: true },
+  { id: 2, source: "stonks.jpg", price: 540, openedToMarketplace: true },
+  { id: 3, source: "gratin.webp", price: 800, openedToMarketplace: true },
+  {
+    id: 4,
+    source: "the_hearth_of_the_andes.JPG",
+    price: 300,
+    openedToMarketplace: true,
+  },
 ]);
 
 const deleteFromGalery = (id: number) => {
