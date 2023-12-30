@@ -150,7 +150,6 @@ form {
   justify-content: space-between;
 }
 img {
-  border: 0.2rem solid lavender;
   border-radius: 1rem;
   width: 90%;
   z-index: 10;
@@ -162,7 +161,7 @@ img:hover {
   cursor: zoom-in;
 }
 img:not(:hover) {
-  transition: transform 200ms ease-in-out;
+  transition: transform 100ms ease-in-out;
   transform: scale(1);
 }
 /* .price-and-delete-row {
@@ -186,7 +185,7 @@ img:not(:hover) {
 .delete-button {
   background-color: lavenderblush;
   border: none;
-  color: black;
+  color: grey;
   font-weight: bold;
   border-radius: 1rem;
 }
