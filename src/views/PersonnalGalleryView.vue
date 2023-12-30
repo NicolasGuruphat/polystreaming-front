@@ -17,6 +17,7 @@
     />
     <personnal-image :empty="true" />
   </div>
+  <hr />
   <h2>Image shared with me</h2>
   <div class="shared-gallery">
     <shared-image

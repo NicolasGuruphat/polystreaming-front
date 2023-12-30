@@ -53,6 +53,25 @@ nav a {
 nav a.router-link-exact-active {
   color: rgb(199, 199, 231);
 }
+h1 {
+  font-size: 3rem;
+  margin-bottom: 3rem;
+}
+h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+hr {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  /* border: none; */
+  /* height: 0.5rem;
+  background: lavender;
+  border-radius: 1rem; */
+  border-top: 0.5rem dotted lavender;
+  color: transparent;
+}
 </style>
 <style scoped>
 #username {

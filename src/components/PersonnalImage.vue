@@ -152,13 +152,14 @@ form {
 img {
   border-radius: 1rem;
   width: 90%;
-  z-index: 10;
+  z-index: 1;
 }
 
 img:hover {
   transition: transform 100ms ease-in-out;
   transform: scale(1.5) translate(16.5%, 16.5%);
   cursor: zoom-in;
+  z-index: 10;
 }
 img:not(:hover) {
   transition: transform 100ms ease-in-out;
