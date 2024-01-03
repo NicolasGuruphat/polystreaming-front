@@ -3,6 +3,12 @@
   <form v-on:submit.prevent="register">
     <input type="text" placeholder="Username" v-model="username" required />
     <input type="password" placeholder="Password" v-model="password" required />
+    <input
+      type="password"
+      placeholder="Confirm password"
+      v-model="confirmPassword"
+      required
+    />
     <div style="width: 50%">
       <div style="text-align: left">
         <router-link to="/" id="login">
@@ -26,12 +32,17 @@ const { loggedUsername, logged } = storeToRefs(store);
 
 let username = ref<string>("");
 let password = ref<string>("");
+let confirmPassword = ref<string>("");
 
 onMounted(() => {
   logged.value = false;
   loggedUsername.value = "";
 });
 const register = () => {
+  if (password.value != confirmPassword.value) {
+    alert("Password and confirm password are different");
+    return;
+  }
   let registerSuccessful = true;
   if (!registerSuccessful) return;
   router.push("/public-gallery");
