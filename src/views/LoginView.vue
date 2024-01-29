@@ -46,9 +46,10 @@ input {
 }
 button {
   font-size: 1.25rem;
-  background-color: white;
+  background-color: lavender;
   border: 1px solid grey;
   border-radius: 1rem;
+  border: none;
   padding: 0.75rem 1.25rem;
   width: 50%;
   margin: 1rem 0;

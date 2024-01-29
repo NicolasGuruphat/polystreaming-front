@@ -129,7 +129,7 @@ table {
 .delete-button {
   background-color: lavenderblush;
   border: none;
-  color: lightblue;
+  color: grey;
 }
 .delete-image-button {
   font-weight: bold;

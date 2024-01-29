@@ -61,8 +61,8 @@ input {
 }
 button {
   font-size: 1.25rem;
-  background-color: white;
-  border: 1px solid grey;
+  background-color: lavender;
+  border: none;
   border-radius: 1rem;
   padding: 0.75rem 1.25rem;
   width: 50%;
