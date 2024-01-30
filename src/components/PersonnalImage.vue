@@ -1,7 +1,7 @@
 <template>
   <div v-if="empty" class="image-item" id="empty-image">
     <label class="add-image-label" for="add-image">Add an image</label>
-    <input id="add-image" type="file" />
+    <input id="add-image" type="file" v-on:change="changeImage" />
   </div>
   <div v-else class="image-item">
     <div class="not-empty-image">
@@ -68,6 +68,7 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from "vue";
 import { useFullscreen } from "@vueuse/core";
+import { useImage } from "@/store/Image";
 
 const props = defineProps({
   empty: {
@@ -98,6 +99,13 @@ const emits = defineEmits([
   "deleteImage",
 ]);
 
+const imageStore = useImage();
+
+const changeImage = (event: any) => {
+  if (event.target.files && event.target.files.length != 0) {
+    imageStore.uploadImage(event.target.files);
+  }
+};
 const image = ref<HTMLElement>();
 const { isFullscreen, toggle } = useFullscreen(image);
 const toggleFullscreen = () => {

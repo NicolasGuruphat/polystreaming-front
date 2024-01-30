@@ -14,5 +14,16 @@ export const useUser = defineStore("app", () => {
   const logout = () => {
     return;
   };
-  return { loggedUsername, logged, cart, login, register, logout };
+  const getOtherUsers = () => {
+    return;
+  };
+  return {
+    loggedUsername,
+    logged,
+    cart,
+    login,
+    register,
+    logout,
+    getOtherUsers,
+  };
 });

@@ -16,65 +16,12 @@
 </template>
 <script setup lang="ts">
 import PublicImage from "@/components/PublicImage.vue";
-import { ref } from "vue";
-let publicImages = ref([
-  {
-    id: 1,
-    source: "blue.png",
-    price: 50,
-    openedToMarketplace: false,
-    creator: "Nicolas",
-  },
-  {
-    id: 2,
-    source: "stonks.jpg",
-    price: 540,
-    openedToMarketplace: true,
-    creator: "Nicolas",
-  },
-  {
-    id: 3,
-    source: "gratin.webp",
-    price: 800,
-    openedToMarketplace: true,
-    creator: "Mathis",
-  },
-  {
-    id: 4,
-    source: "the_hearth_of_the_andes.JPG",
-    price: 300,
-    openedToMarketplace: true,
-    creator: "Nicolas",
-  },
-  {
-    id: 5,
-    source: "blue.png",
-    price: 50,
-    openedToMarketplace: false,
-    creator: "Nicolas",
-  },
-  {
-    id: 6,
-    source: "stonks.jpg",
-    price: 540,
-    openedToMarketplace: true,
-    creator: "Nicolas",
-  },
-  {
-    id: 7,
-    source: "gratin.webp",
-    price: 800,
-    openedToMarketplace: true,
-    creator: "Nicolas",
-  },
-  {
-    id: 8,
-    source: "the_hearth_of_the_andes.JPG",
-    price: 300,
-    openedToMarketplace: true,
-    creator: "Nicolas",
-  },
-]);
+import { useImage } from "@/store/Image";
+import { storeToRefs } from "pinia";
+
+const imageStore = useImage();
+const { publicImages } = storeToRefs(imageStore);
+
 const sortByAscPrice = () => {
   publicImages.value = publicImages.value.sort(function (img1, img2) {
     return img1.price > img2.price;

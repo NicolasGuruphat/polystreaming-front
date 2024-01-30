@@ -41,7 +41,12 @@ import { useUser } from "@/store/User";
 router.beforeEach(async (to, from) => {
   // TODO : make a call to check log
 
-  if (!useUser().logged && to.name !== "login" && to.name !== "register") {
+  if (
+    !useUser().logged &&
+    to.name !== "login" &&
+    to.name !== "register" &&
+    to.name != "public-gallery"
+  ) {
     return { name: "login" };
   }
 });
