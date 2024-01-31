@@ -5,15 +5,12 @@
     <personnal-image
       :id="image.id"
       :source="image.source"
-      v-model:price="image.price"
-      v-model:openedToMarketplace="image.openedToMarketplace"
+      :name="image.name"
+      :sharedWith="image.sharedwith"
+      :ispublic="image.ispublic"
+      :price="image.price"
       v-for="image in personnalImages"
       :key="image.id"
-      @delete-image="
-        (value) => {
-          deleteFromGalery(value);
-        }
-      "
     />
     <personnal-image :empty="true" />
   </div>
@@ -25,7 +22,7 @@
       :id="image.id"
       :source="image.source"
       v-model:price="image.price"
-      v-model:openedToMarketplace="image.openedToMarketplace"
+      v-model:public="image.public"
       v-for="image in sharedImages"
       :key="image.id"
       @delete-image="
@@ -40,22 +37,21 @@
 import PersonnalImage from "@/components/PersonnalImage.vue";
 import SharedImage from "@/components/SharedImage.vue";
 import { useImage } from "@/store/Image";
+import { useUser } from "@/store/User";
 import { storeToRefs } from "pinia";
+import { onMounted } from "vue";
 
 const imageStore = useImage();
+const userStore = useUser();
 const { personnalImages, sharedImages } = storeToRefs(imageStore);
 
-const deleteFromGalery = (id: number) => {
-  imageStore.deleteImage(id);
-  // personnalImages.value = personnalImages.value.filter((image) => {
-  //   return image.id != id;
-  // });
-};
+onMounted(() => {
+  imageStore.getMyImages();
+  imageStore.getImageSharedWithMe();
+  userStore.getOtherUsernames();
+});
 const deleteFromSharedGalery = (id: number) => {
   imageStore.removeFromMyShared(id);
-  // sharedImages.value = sharedImages.value.filter((image) => {
-  //   return image.id != id;
-  // });
 };
 </script>
 <style>

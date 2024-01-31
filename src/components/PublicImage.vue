@@ -1,6 +1,10 @@
 <template>
   <div style="position: relative; text-align: center; width: 100%">
-    <img :src="source" ref="image" alt="shared image" />
+    <img
+      :src="'http://localhost:8080/images/image/' + id"
+      ref="image"
+      alt="shared image"
+    />
     <button class="image-info buy-image-button" @click="addToCart">
       <img
         src="@/assets/cart-shopping-solid.svg"

@@ -14,25 +14,18 @@
   </form>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useUser } from "@/store/User";
 import { storeToRefs } from "pinia";
-import { useRouter } from "vue-router";
 
-const router = useRouter();
-
-const store = useUser();
-const { loggedUsername, logged } = storeToRefs(store);
-
+const userStore = useUser();
 let username = ref<string>("");
 let password = ref<string>("");
-
+onMounted(() => {
+  userStore.logout();
+});
 const login = () => {
-  let loginSuccessful = true;
-  if (!loginSuccessful) return;
-  router.push("/public-gallery");
-  loggedUsername.value = username.value;
-  logged.value = true;
+  userStore.login(username.value, password.value);
 };
 </script>
 <style scoped>

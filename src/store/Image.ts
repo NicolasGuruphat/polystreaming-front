@@ -1,137 +1,193 @@
 import axios from "axios";
 import { defineStore } from "pinia";
-import { reactive, ref } from "vue";
+import { ref } from "vue";
+import { useNotification } from "@/store/Notification";
+import router from "@/router";
 
 export const useImage = defineStore("imageStore", () => {
-  const personnalImages = ref([
-    { id: 1, source: "blue.png", price: 50, openedToMarketplace: false },
-    { id: 2, source: "stonks.jpg", price: 540, openedToMarketplace: true },
-    { id: 3, source: "gratin.webp", price: 800, openedToMarketplace: true },
-    {
-      id: 4,
-      source: "the_hearth_of_the_andes.JPG",
-      price: 300,
-      openedToMarketplace: true,
-    },
-  ]);
-  const sharedImages = ref([
-    { id: 1, source: "blue.png", price: 50, openedToMarketplace: false },
-    { id: 2, source: "stonks.jpg", price: 540, openedToMarketplace: true },
-    { id: 3, source: "gratin.webp", price: 800, openedToMarketplace: true },
-    {
-      id: 4,
-      source: "the_hearth_of_the_andes.JPG",
-      price: 300,
-      openedToMarketplace: true,
-    },
-  ]);
-  const publicImages = ref([
-    {
-      id: 1,
-      source: "blue.png",
-      price: 50,
-      openedToMarketplace: false,
-      creator: "Nicolas",
-    },
-    {
-      id: 2,
-      source: "stonks.jpg",
-      price: 540,
-      openedToMarketplace: true,
-      creator: "Nicolas",
-    },
-    {
-      id: 3,
-      source: "gratin.webp",
-      price: 800,
-      openedToMarketplace: true,
-      creator: "Mathis",
-    },
-    {
-      id: 4,
-      source: "the_hearth_of_the_andes.JPG",
-      price: 300,
-      openedToMarketplace: true,
-      creator: "Nicolas",
-    },
-    {
-      id: 5,
-      source: "blue.png",
-      price: 50,
-      openedToMarketplace: false,
-      creator: "Nicolas",
-    },
-    {
-      id: 6,
-      source: "stonks.jpg",
-      price: 540,
-      openedToMarketplace: true,
-      creator: "Nicolas",
-    },
-    {
-      id: 7,
-      source: "gratin.webp",
-      price: 800,
-      openedToMarketplace: true,
-      creator: "Nicolas",
-    },
-    {
-      id: 8,
-      source: "the_hearth_of_the_andes.JPG",
-      price: 300,
-      openedToMarketplace: true,
-      creator: "Nicolas",
-    },
-  ]);
+  const notificationStore = useNotification();
+  const personnalImages = ref([]);
+
+  const sharedImages = ref([]);
+  const publicImages = ref([]);
+
   function uploadImage(file: any) {
-    /*
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("price", "0.0");
+    formData.append("name", "");
+    formData.append("description", "");
+    formData.append("public", "false");
+    axios
+      .post("http://localhost:8080/images/save", formData, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then(() => {
+        getMyImages();
+      })
+      .catch(() => {
+        notificationStore.setMessage("Server error", true);
+      });
+  }
+  const modifyImage = (id: number, data: any) => {
+    console.log("update");
+    const formData = new FormData();
+    formData.append("description", data.description);
+    formData.append("name", data.name);
+    formData.append("price", data.price);
+    formData.append("public", data.ispublic);
+    axios
+      .put("http://localhost:8080/images/update/" + id, formData, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then(() => {
+        getMyImages();
+      })
+      .catch((error) => {
+        if (error.response.status === 403) {
+          router.push("/");
+        } else {
+          notificationStore.setMessage("Server error", true);
+        }
+      });
+  };
+  const deleteImage = (id: number) => {
+    axios
+      .delete("http://localhost:8080/images/delete/" + id, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then(() => {
+        getMyImages();
+      })
+      .catch((error) => {
+        if (error.response.status === 403) {
+          router.push("/");
+        } else {
+          notificationStore.setMessage("Server error", true);
+        }
+      });
+  };
+  const shareImage = (id: number, username: string) => {
     axios
       .post(
-        "http://localhost:8080/images/save",
-        {
-          name: "",
-          price: 0.0,
-          description: "",
-          image: file,
-        },
+        "http://localhost:8080/images/share",
+        { username: username, idimage: id },
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       )
       .then(() => {
-        console.log("image uploaded");
+        getMyImages();
+      })
+      .catch((error) => {
+        if (error.response.status === 403) {
+          router.push("/");
+        } else {
+          notificationStore.setMessage("Server error", true);
+        }
       });
-      */
-    console.log(file);
-
-    // getMyImages();
-  }
-  const modifyImage = () => {
     return;
   };
-  const deleteImage = (id: number) => {
+  const unshareImage = (username: string, id: number) => {
+    axios
+      .put(
+        "http://localhost:8080/images/unshare",
+        {
+          username: username,
+          idimage: id,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      )
+      .then(() => {
+        getMyImages();
+      })
+      .catch((error) => {
+        if (error.response.status === 403) {
+          router.push("/");
+        } else {
+          notificationStore.setMessage("Server error", true);
+        }
+      });
     return;
   };
-  const shareImage = () => {
-    return;
-  };
-  const unshareImage = () => {
-    // remove a person
-    return;
-  };
-  const removeFromMyShared = () => {
-    // remove me
-    return;
+  const removeFromMyShared = (id: number) => {
+    const formData = new FormData();
+    formData.append("idimage", id.toString());
+    axios
+      .put("http://localhost:8080/images/unsharewithme", formData, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then(() => {
+        getImageSharedWithMe();
+      })
+      .catch((error) => {
+        if (error.response.status === 403) {
+          router.push("/");
+        } else {
+          notificationStore.setMessage("Server error", true);
+        }
+      });
   };
   const getMyImages = () => {
-    return;
+    axios
+      .get("http://localhost:8080/images/mine", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        personnalImages.value = response.data;
+      })
+      .catch((error) => {
+        if (error.response.status === 403) {
+          router.push("/");
+        } else {
+          notificationStore.setMessage("Server error", true);
+        }
+      });
   };
   const getImageSharedWithMe = () => {
-    return;
+    axios
+      .get("http://localhost:8080/images/shared", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        sharedImages.value = response.data;
+      })
+      .catch((error) => {
+        if (error.response.status === 403) {
+          router.push("/");
+        } else {
+          notificationStore.setMessage("Server error", true);
+        }
+      });
   };
   const getPublicImages = () => {
+    axios
+      .get("http://localhost:8080/images/public")
+      .then((response) => {
+        publicImages.value = response.data;
+      })
+      .catch(() => {
+        notificationStore.setMessage("Server error", true);
+      });
     return;
   };
   return {

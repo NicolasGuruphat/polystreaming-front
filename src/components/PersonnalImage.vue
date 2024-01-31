@@ -6,7 +6,7 @@
   <div v-else class="image-item">
     <div class="not-empty-image">
       <img
-        :src="source"
+        :src="'http://localhost:8080/images/image/' + id"
         @click="toggleFullscreen"
         ref="image"
         alt="personnal image"
@@ -18,11 +18,7 @@
         <div style="clear: both">
           <span class="price-label">{{ price }} €</span>
           <button class="image-action-button" @click="toggleMarketplace">
-            {{
-              openedToMarketplace
-                ? "Remove from marketplace"
-                : "Open to marketplace"
-            }}
+            {{ ispublic ? "Remove from marketplace" : "Open to marketplace" }}
           </button>
         </div>
         <form v-on:submit.prevent="updatePrice">
@@ -44,7 +40,7 @@
 
         <form v-on:submit.prevent="share">
           <select v-model="selectedUsername">
-            <option v-for="username of usernames" :key="username">
+            <option v-for="username of otherUsernames" :key="username">
               {{ username }}
             </option>
           </select>
@@ -56,11 +52,11 @@
       <span class="user-share-with" v-for="user of sharedWith" :key="user">
         <button
           class="delete-button delete-user-share-with-button"
-          @click="deleteShare(user)"
+          @click="imageStore.unshareImage(user.name, props.id)"
         >
           X
         </button>
-        {{ user }}
+        {{ user.name }}
       </span>
     </div>
   </div>
@@ -69,6 +65,8 @@
 import { ref, defineProps, defineEmits } from "vue";
 import { useFullscreen } from "@vueuse/core";
 import { useImage } from "@/store/Image";
+import { useUser } from "@/store/User";
+import { storeToRefs } from "pinia";
 
 const props = defineProps({
   empty: {
@@ -77,33 +75,30 @@ const props = defineProps({
   },
   id: {
     type: Number,
-    required: false,
+  },
+  name: {
+    type: String,
   },
   source: {
     type: String,
-    required: false,
   },
   price: {
     type: Number,
-    required: false,
   },
-  openedToMarketplace: {
+  ispublic: {
     type: Boolean,
-    required: false,
+  },
+  sharedWith: {
+    type: Array,
   },
 });
 
-const emits = defineEmits([
-  "update:price",
-  "update:openedToMarketplace",
-  "deleteImage",
-]);
-
 const imageStore = useImage();
+const userstore = useUser();
 
 const changeImage = (event: any) => {
   if (event.target.files && event.target.files.length != 0) {
-    imageStore.uploadImage(event.target.files);
+    imageStore.uploadImage(event.target.files[0]);
   }
 };
 const image = ref<HTMLElement>();
@@ -119,7 +114,12 @@ const toggleFullscreen = () => {
 };
 
 const updatePrice = () => {
-  emits("update:price", modifiedPrice.value);
+  imageStore.modifyImage(props.id, {
+    name: props.name,
+    price: modifiedPrice.value,
+    ispublic: props.ispublic,
+    description: "",
+  });
 };
 
 const deleteImage = () => {
@@ -129,24 +129,23 @@ const deleteImage = () => {
       "Are you sure that you want to do this ?"
   );
   if (!result) return;
-  emits("deleteImage", props.id);
+  imageStore.deleteImage(props.id);
 };
 const modifiedPrice = ref<number>(props.price ? props.price : 0);
 const toggleMarketplace = () => {
-  emits("update:openedToMarketplace", !props.openedToMarketplace);
+  imageStore.modifyImage(props.id, {
+    name: props.name,
+    price: modifiedPrice.value,
+    ispublic: !props.ispublic,
+    description: "",
+  });
 };
+const { otherUsernames } = storeToRefs(userstore);
+const selectedUsername = ref(otherUsernames.value[0]);
 
-const usernames = ref(["Nicolas", "Gregory", "Mathis", "Guillaume", "Vincent"]);
-const selectedUsername = ref(usernames.value[0]);
-
-const sharedWith = ref<Array<string>>([]); // to fill with api call ?
 const share = () => {
-  if (selectedUsername.value in sharedWith.value) return; // todo : doesnt work
-  sharedWith.value.push(selectedUsername.value);
-};
-
-const deleteShare = (user: string) => {
-  sharedWith.value.splice(sharedWith.value.indexOf(user), 1);
+  // if (selectedUsername.value in sharedWith.value) return; // todo : doesnt work
+  imageStore.shareImage(props.id, selectedUsername.value);
 };
 </script>
 <style scoped>

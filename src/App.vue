@@ -1,9 +1,26 @@
 <template>
-  <div id="username" v-if="logged">
+  <div class="auth" v-if="logged">
     Hello <b>{{ loggedUsername }}</b> !
     <router-link to="/">Logout</router-link>
   </div>
-
+  <div v-else-if="router.currentRoute.value.name !== 'login'" class="auth">
+    <router-link to="/">Login</router-link>
+  </div>
+  <div
+    v-if="enabled"
+    :class="{ error: isError, 'not-error': !isError }"
+    style="
+      position: absolute;
+      right: 1.5rem;
+      top: 1.5rem;
+      padding: 1rem;
+      border-radius: 1rem;
+      color: white;
+      z-index: 1000;
+    "
+  >
+    {{ message }}
+  </div>
   <router-link id="cart" v-if="logged" to="/cart"
     ><img
       src="@/assets/cart-shopping-solid.svg"
@@ -22,11 +39,27 @@
 <script setup lang="ts">
 import { useUser } from "@/store/User";
 import { storeToRefs } from "pinia";
+import { useNotification } from "@/store/Notification";
+import router from "./router";
+import { onMounted } from "vue";
 
+const notificationStore = useNotification();
+const { enabled, message, isError } = storeToRefs(notificationStore);
 const store = useUser();
 const { loggedUsername, logged, cart } = storeToRefs(store);
+onMounted(() => {
+  if (loggedUsername && localStorage.getItem("token") != "") {
+    logged.value = true;
+  }
+});
 </script>
 <style>
+.error {
+  background-color: lightcoral;
+}
+.not-error {
+  background-color: lightblue;
+}
 body {
   background-color: aliceblue;
 }
@@ -74,7 +107,7 @@ hr {
 }
 </style>
 <style scoped>
-#username {
+.auth {
   left: 1rem;
   position: absolute;
   top: 0.5rem;

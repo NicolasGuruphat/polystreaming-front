@@ -1,7 +1,7 @@
 <template>
   <div style="position: relative; text-align: center; width: 100%">
     <img
-      :src="source"
+      :src="'http://localhost:8080/images/image/' + id"
       @click="toggleFullscreen"
       ref="image"
       alt="shared image"
@@ -10,8 +10,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps } from "vue";
 import { useFullscreen } from "@vueuse/core";
+import { useImage } from "@/store/Image";
+
+const imageStore = useImage();
 
 const props = defineProps({
   empty: {
@@ -30,13 +33,11 @@ const props = defineProps({
     type: Number,
     required: false,
   },
-  openedToMarketplace: {
+  public: {
     type: Boolean,
     required: false,
   },
 });
-
-const emits = defineEmits(["deleteImage"]);
 
 const image = ref<HTMLElement>();
 const { isFullscreen, toggle } = useFullscreen(image);
@@ -57,7 +58,7 @@ const deleteImage = () => {
       "Are you sure that you want to do this ?"
   );
   if (!result) return;
-  emits("deleteImage", props.id);
+  imageStore.removeFromMyShared(props.id);
 };
 </script>
 <style scoped>

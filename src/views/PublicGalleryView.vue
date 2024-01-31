@@ -18,10 +18,14 @@
 import PublicImage from "@/components/PublicImage.vue";
 import { useImage } from "@/store/Image";
 import { storeToRefs } from "pinia";
+import { onMounted } from "vue";
 
 const imageStore = useImage();
 const { publicImages } = storeToRefs(imageStore);
 
+onMounted(() => {
+  imageStore.getPublicImages();
+});
 const sortByAscPrice = () => {
   publicImages.value = publicImages.value.sort(function (img1, img2) {
     return img1.price > img2.price;

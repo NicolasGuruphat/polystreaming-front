@@ -61,14 +61,14 @@ let cartImages = ref([
     id: 1,
     source: "the_hearth_of_the_andes.JPG",
     price: 50,
-    openedToMarketplace: false,
+    public: false,
     owner: "Nicolas",
   },
   {
     id: 3,
     source: "stonks.jpg",
     price: 800,
-    openedToMarketplace: true,
+    public: true,
     owner: "Gregory",
   },
 ]);

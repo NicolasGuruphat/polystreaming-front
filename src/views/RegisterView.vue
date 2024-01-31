@@ -24,31 +24,34 @@ import { onMounted, ref } from "vue";
 import { useUser } from "@/store/User";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
+import { useNotification } from "@/store/Notification";
 
 const router = useRouter();
 
+let notificationStore = useNotification();
+
+const userStore = useUser();
 const store = useUser();
 const { loggedUsername, logged } = storeToRefs(store);
 
 let username = ref<string>("");
 let password = ref<string>("");
 let confirmPassword = ref<string>("");
+const register = () => {
+  if (password.value != confirmPassword.value) {
+    notificationStore.setMessage(
+      "Password and confirm password are different",
+      true
+    );
+  } else {
+    userStore.register(username.value, password.value);
+  }
+};
 
 onMounted(() => {
   logged.value = false;
   loggedUsername.value = "";
 });
-const register = () => {
-  if (password.value != confirmPassword.value) {
-    alert("Password and confirm password are different");
-    return;
-  }
-  let registerSuccessful = true;
-  if (!registerSuccessful) return;
-  router.push("/public-gallery");
-  loggedUsername.value = username.value;
-  logged.value = true;
-};
 </script>
 <style scoped>
 input {
