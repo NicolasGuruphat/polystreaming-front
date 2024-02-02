@@ -39,7 +39,9 @@
         </td>
       </tr>
     </table>
-    <button id="confirm-purchase-button">Confirm purchase</button>
+    <button id="confirm-purchase-button" @click="buyCartContent">
+      Confirm purchase
+    </button>
   </div>
   <div v-else>
     Cart is empty. You can purchase images at
@@ -53,10 +55,12 @@ import { useUser } from "@/store/User";
 import { storeToRefs } from "pinia";
 import { ref, computed, onMounted } from "vue";
 import { useImage } from "@/store/Image";
+import { useNotification } from "@/store/Notification";
 
 const imageStore = useImage();
 const store = useUser();
 const { cart } = storeToRefs(store);
+const storeNotification = useNotification();
 // in the end, it will be get by an endpoint
 
 // let cartImages = ref([
@@ -87,6 +91,10 @@ const deleteFromCart = (id: number) => {
 };
 const emptyCart = () => {
   cart.value = [];
+};
+const buyCartContent = () => {
+  storeNotification.setMessage("Congratulation, you're a pigeon !", false);
+  emptyCart();
 };
 </script>
 <style scoped>
