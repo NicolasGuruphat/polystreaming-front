@@ -21,7 +21,10 @@
   >
     {{ message }}
   </div>
-  <router-link id="cart" v-if="logged" to="/cart"
+  <router-link
+    id="cart"
+    v-if="router.currentRoute.value.name !== 'login'"
+    to="/cart"
     ><img
       src="@/assets/cart-shopping-solid.svg"
       alt="cart"

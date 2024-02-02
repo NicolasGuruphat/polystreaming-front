@@ -40,7 +40,13 @@
 
         <form v-on:submit.prevent="share">
           <select v-model="selectedUsername">
-            <option v-for="username of otherUsernames" :key="username">
+            <option
+              v-for="username of otherUsernames.filter(
+                (element) =>
+                  !sharedWith?.map((item) => item.name).includes(element)
+              )"
+              :key="username"
+            >
               {{ username }}
             </option>
           </select>
@@ -66,6 +72,7 @@ import { ref, defineProps, defineEmits } from "vue";
 import { useFullscreen } from "@vueuse/core";
 import { useImage } from "@/store/Image";
 import { useUser } from "@/store/User";
+import { useNotification } from "@/store/Notification";
 import { storeToRefs } from "pinia";
 
 const props = defineProps({
@@ -95,6 +102,7 @@ const props = defineProps({
 
 const imageStore = useImage();
 const userstore = useUser();
+const notificationStore = useNotification();
 
 const changeImage = (event: any) => {
   if (event.target.files && event.target.files.length != 0) {
@@ -144,7 +152,12 @@ const { otherUsernames } = storeToRefs(userstore);
 const selectedUsername = ref(otherUsernames.value[0]);
 
 const share = () => {
-  // if (selectedUsername.value in sharedWith.value) return; // todo : doesnt work
+  if (
+    props.sharedWith?.map((item) => item.name).includes(selectedUsername.value)
+  ) {
+    notificationStore.setMessage("Already shared with this user", true);
+    return;
+  }
   imageStore.shareImage(props.id, selectedUsername.value);
 };
 </script>

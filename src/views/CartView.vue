@@ -1,6 +1,6 @@
 <template>
   <h1>Cart</h1>
-  <div v-if="cartImages.length != 0">
+  <div v-if="cart.length != 0">
     <table>
       <tr>
         <th scope="col">Image</th>
@@ -8,16 +8,16 @@
         <th scope="col">Id</th>
         <th scope="col">Owner</th>
       </tr>
-      <tr v-for="item in cartImages" :key="item.id">
+      <tr v-for="item in cart" :key="item.id">
         <td>
           <img
-            :src="item.source"
+            :src="'http://localhost:8080/images/image/' + item.id"
             style="height: 100%; width: 100%; border-radius: 0.75rem"
           />
         </td>
         <td>{{ item.price }} €</td>
         <td>{{ item.id }}</td>
-        <td>{{ item.owner }}</td>
+        <td>{{ item.creator }}</td>
         <td style="position: relative">
           <button
             class="delete-button delete-image-button"
@@ -31,7 +31,7 @@
         <td>Total price :</td>
         <td>{{ totalPrice }} €</td>
         <td>Article numbers :</td>
-        <td>{{ cartImages.length }}</td>
+        <td>{{ cart.length }}</td>
         <td>
           <button class="delete-button delete-all-button" @click="emptyCart">
             Empty cart
@@ -51,39 +51,42 @@
 <script setup lang="ts">
 import { useUser } from "@/store/User";
 import { storeToRefs } from "pinia";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { useImage } from "@/store/Image";
 
+const imageStore = useImage();
 const store = useUser();
 const { cart } = storeToRefs(store);
 // in the end, it will be get by an endpoint
-let cartImages = ref([
-  {
-    id: 1,
-    source: "the_hearth_of_the_andes.JPG",
-    price: 50,
-    public: false,
-    owner: "Nicolas",
-  },
-  {
-    id: 3,
-    source: "stonks.jpg",
-    price: 800,
-    public: true,
-    owner: "Gregory",
-  },
-]);
+
+// let cartImages = ref([
+//   {
+//     id: 1,
+//     source: "the_hearth_of_the_andes.JPG",
+//     price: 50,
+//     public: false,
+//     owner: "Nicolas",
+//   },
+//   {
+//     id: 3,
+//     source: "stonks.jpg",
+//     price: 800,
+//     public: true,
+//     owner: "Gregory",
+//   },
+// ]);
 const totalPrice = computed(() => {
-  return cartImages.value.reduce((accumulator, element) => {
+  return cart.value.reduce((accumulator, element) => {
     return accumulator + element.price;
   }, 0);
 });
 const deleteFromCart = (id: number) => {
-  cartImages.value = cartImages.value.filter((image) => {
+  cart.value = cart.value.filter((image) => {
     return image.id != id;
   });
 };
 const emptyCart = () => {
-  cartImages.value = [];
+  cart.value = [];
 };
 </script>
 <style scoped>

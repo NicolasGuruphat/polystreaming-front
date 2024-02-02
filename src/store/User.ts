@@ -3,11 +3,11 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { useNotification } from "@/store/Notification";
-
+import { useStorage } from "@vueuse/core";
 export const useUser = defineStore("userStore", () => {
   const loggedUsername = ref(localStorage.getItem("username"));
   const logged = ref(false);
-  const cart = reactive<Array<number>>([]);
+  const cart = useStorage("cart", []); //storareactive<Array<number>>(localStorage.getItem("cart"));
   const router = useRouter();
   const notificationStore = useNotification();
   const otherUsernames = ref([]);

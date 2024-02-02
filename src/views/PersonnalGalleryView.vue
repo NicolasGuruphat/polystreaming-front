@@ -21,15 +21,9 @@
       class="shared-image"
       :id="image.id"
       :source="image.source"
-      v-model:price="image.price"
-      v-model:public="image.public"
+      :creator="image.creator"
       v-for="image in sharedImages"
       :key="image.id"
-      @delete-image="
-        (value) => {
-          deleteFromSharedGalery(value);
-        }
-      "
     />
   </div>
 </template>

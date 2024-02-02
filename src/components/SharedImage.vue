@@ -7,6 +7,7 @@
       alt="shared image"
     />
     <button class="delete-image-button" @click="deleteImage">X</button>
+    <div class="image-info image-creator">{{ creator }}</div>
   </div>
 </template>
 <script setup lang="ts">
@@ -23,19 +24,15 @@ const props = defineProps({
   },
   id: {
     type: Number,
-    required: false,
-  },
-  source: {
-    type: String,
-    required: false,
   },
   price: {
     type: Number,
-    required: false,
   },
   public: {
     type: Boolean,
-    required: false,
+  },
+  creator: {
+    type: String,
   },
 });
 
@@ -62,6 +59,17 @@ const deleteImage = () => {
 };
 </script>
 <style scoped>
+.image-info {
+  background-color: rgba(255, 240, 245, 0.9);
+  color: black;
+  position: absolute;
+}
+.image-creator {
+  border-radius: 1rem;
+  padding: 0.5rem;
+  right: 5px;
+  top: 40px;
+}
 form {
   border: 2px dashed lavender;
   border-radius: 1rem;

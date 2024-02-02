@@ -43,8 +43,13 @@ const props = defineProps({
   },
 });
 const addToCart = () => {
-  if (props.id in cart.value) return; // Todo : doesn't work
-  cart.value.push(props.id);
+  console.log(cart.value.map((item) => item.id));
+  if (cart.value.map((item) => item.id).includes(props.id)) return; // Todo : doesn't work
+  cart.value.push({
+    id: props.id,
+    price: props.price,
+    creator: props.creator,
+  });
 };
 </script>
 <style scoped>
