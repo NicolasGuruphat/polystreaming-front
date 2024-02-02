@@ -20,9 +20,11 @@
 import { defineProps } from "vue";
 import { useUser } from "@/store/User";
 import { storeToRefs } from "pinia";
+import { useNotification } from "@/store/Notification";
 
 const store = useUser();
 const { cart } = storeToRefs(store);
+const storeNotification = useNotification();
 
 const props = defineProps({
   id: {
@@ -43,13 +45,16 @@ const props = defineProps({
   },
 });
 const addToCart = () => {
-  console.log(cart.value.map((item) => item.id));
-  if (cart.value.map((item) => item.id).includes(props.id)) return; // Todo : doesn't work
-  cart.value.push({
-    id: props.id,
-    price: props.price,
-    creator: props.creator,
-  });
+  if (cart.value.map((item) => item.id).includes(props.id)) {
+    storeNotification.setMessage("Already in cart", true);
+  } else {
+    storeNotification.setMessage("Successfuly added to cart", false);
+    cart.value.push({
+      id: props.id,
+      price: props.price,
+      creator: props.creator,
+    });
+  }
 };
 </script>
 <style scoped>
