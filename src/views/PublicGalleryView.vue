@@ -11,6 +11,7 @@
       :key="image.id"
       :price="image.price"
       :creator="image.creator"
+      :name="image.name"
     ></public-image>
   </div>
 </template>
@@ -38,7 +39,7 @@ const sortByDescPrice = () => {
 };
 const sortByAuthorName = () => {
   publicImages.value = publicImages.value.sort(function (img1, img2) {
-    return img1.creator < img2.creator;
+    return img1.creator > img2.creator;
   });
 };
 </script>

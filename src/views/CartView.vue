@@ -5,7 +5,7 @@
       <tr>
         <th scope="col">Image</th>
         <th scope="col">Price</th>
-        <th scope="col">Id</th>
+        <th scope="col">Name</th>
         <th scope="col">Owner</th>
       </tr>
       <tr v-for="item in cart" :key="item.id">
@@ -16,7 +16,7 @@
           />
         </td>
         <td>{{ item.price }} €</td>
-        <td>{{ item.id }}</td>
+        <td>{{ item.name }}</td>
         <td>{{ item.creator }}</td>
         <td style="position: relative">
           <button
@@ -61,24 +61,9 @@ const imageStore = useImage();
 const store = useUser();
 const { cart } = storeToRefs(store);
 const storeNotification = useNotification();
-// in the end, it will be get by an endpoint
-
-// let cartImages = ref([
-//   {
-//     id: 1,
-//     source: "the_hearth_of_the_andes.JPG",
-//     price: 50,
-//     public: false,
-//     owner: "Nicolas",
-//   },
-//   {
-//     id: 3,
-//     source: "stonks.jpg",
-//     price: 800,
-//     public: true,
-//     owner: "Gregory",
-//   },
-// ]);
+onMounted(() => {
+  console.log(cart.value);
+});
 const totalPrice = computed(() => {
   return cart.value.reduce((accumulator, element) => {
     return accumulator + element.price;
@@ -93,7 +78,7 @@ const emptyCart = () => {
   cart.value = [];
 };
 const buyCartContent = () => {
-  storeNotification.setMessage("Congratulation, you're a pigeon !", false);
+  storeNotification.setMessage("Congratulations !", false);
   emptyCart();
 };
 </script>

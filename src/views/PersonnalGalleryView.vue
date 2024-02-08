@@ -22,6 +22,7 @@
       :id="image.id"
       :source="image.source"
       :creator="image.creator"
+      :name="image.name"
       v-for="image in sharedImages"
       :key="image.id"
     />

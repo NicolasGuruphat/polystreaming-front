@@ -1,4 +1,4 @@
-# polystreaming-front
+# uploader-deluxe
 
 ## Project setup
 ```

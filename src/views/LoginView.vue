@@ -12,6 +12,10 @@
     </div>
     <button type="submit">Login</button>
   </form>
+  <div style="font-size: 2rem; margin: 1rem">Or</div>
+  <router-link to="/public-gallery" style="font-size: 1.25rem"
+    >Access public gallery without account</router-link
+  >
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";

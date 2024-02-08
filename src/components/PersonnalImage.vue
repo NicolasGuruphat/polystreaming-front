@@ -16,6 +16,8 @@
           X
         </button>
         <div style="clear: both">
+          <span class="name-label">{{ name }}</span>
+
           <span class="price-label">{{ price }} €</span>
           <button class="image-action-button" @click="toggleMarketplace">
             {{ ispublic ? "Remove from marketplace" : "Open to marketplace" }}
@@ -51,6 +53,21 @@
             </option>
           </select>
           <button class="image-action-button">Share</button>
+        </form>
+
+        <form v-on:submit.prevent="updateName">
+          <input
+            placeholder="Name"
+            type="text"
+            v-model="modifiedName"
+            style="width: 35%; display: inline-block"
+          />
+          <button
+            class="image-action-button"
+            style="width: 40%; display: inline-block"
+          >
+            Update name
+          </button>
         </form>
       </div>
     </div>
@@ -129,6 +146,14 @@ const updatePrice = () => {
     description: "",
   });
 };
+const updateName = () => {
+  imageStore.modifyImage(props.id, {
+    name: modifiedName.value,
+    price: props.price,
+    ispublic: props.ispublic,
+    description: "",
+  });
+};
 
 const deleteImage = () => {
   const result = confirm(
@@ -140,6 +165,7 @@ const deleteImage = () => {
   imageStore.deleteImage(props.id);
 };
 const modifiedPrice = ref<number>(props.price ? props.price : 0);
+const modifiedName = ref<string>(props.name ? props.name : "");
 const toggleMarketplace = () => {
   imageStore.modifyImage(props.id, {
     name: props.name,
@@ -259,5 +285,9 @@ select {
 .price-label {
   font-style: italic;
   clear: both;
+}
+
+.name-label {
+  margin-right: 1rem;
 }
 </style>

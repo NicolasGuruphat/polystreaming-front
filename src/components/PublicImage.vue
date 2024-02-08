@@ -14,6 +14,7 @@
     </button>
     <div class="image-info image-price">{{ price }} €</div>
     <div class="image-info image-creator">{{ creator }}</div>
+    <div class="image-info image-name">{{ name }}</div>
   </div>
 </template>
 <script setup lang="ts">
@@ -43,6 +44,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
 });
 const addToCart = () => {
   if (cart.value.map((item) => item.id).includes(props.id)) {
@@ -53,6 +58,7 @@ const addToCart = () => {
       id: props.id,
       price: props.price,
       creator: props.creator,
+      name: props.name,
     });
   }
 };
@@ -77,6 +83,12 @@ img {
   padding: 0.5rem;
   right: 5px;
   top: 80px;
+}
+.image-name {
+  border-radius: 1rem;
+  padding: 0.5rem;
+  right: 5px;
+  top: 120px;
 }
 .image-price {
   border-radius: 1rem;

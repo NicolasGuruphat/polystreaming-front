@@ -8,6 +8,7 @@
     />
     <button class="delete-image-button" @click="deleteImage">X</button>
     <div class="image-info image-creator">{{ creator }}</div>
+    <div class="image-info image-name">{{ name }}</div>
   </div>
 </template>
 <script setup lang="ts">
@@ -32,6 +33,9 @@ const props = defineProps({
     type: Boolean,
   },
   creator: {
+    type: String,
+  },
+  name: {
     type: String,
   },
 });
@@ -69,6 +73,12 @@ const deleteImage = () => {
   padding: 0.5rem;
   right: 5px;
   top: 40px;
+}
+.image-name {
+  border-radius: 1rem;
+  padding: 0.5rem;
+  right: 5px;
+  top: 80px;
 }
 form {
   border: 2px dashed lavender;
